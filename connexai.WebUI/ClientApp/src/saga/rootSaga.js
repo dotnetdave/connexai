@@ -1,11 +1,11 @@
-﻿import { all, delay, put, takeLatest } from 'redux-saga/effects';
+﻿import { all, delay, put, takeLatest, call } from 'redux-saga/effects';
 import { REQUEST_INCREMENT, INCREMENT, REQUEST_GET_PROJECTS, GET_PROJECTS } from '../actions/actionConstants';
 
-export default function* rootSaga() {
+export default function* () {
     yield all([
         watchIncrementAsync(),
         watchGetProjectsAsync()
-    ])
+    ]);
 }
 
 export function* watchIncrementAsync() {
@@ -22,9 +22,7 @@ export function* watchGetProjectsAsync() {
 }
 
 export function* getProjectsAsync() {
-    yield delay(1000);
-    var projects = [{ name: 'Dave' }, { name: 'Ann' }, { name: 'Fred' }];
-    console.log(projects);
-    yield put({ type: GET_PROJECTS, projects: projects });
+    const json = yield fetch('/api/projects/all').then(response => response.json());
+    yield put({ type: GET_PROJECTS, projects: json.projects });
 }
 
