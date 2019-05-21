@@ -1,20 +1,20 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { incrementActions } from '../actions/incrementActions';
 import { projectActions } from '../actions/projectActions';
 
-const Home = props => (
-    <div>
-        <h1>Projects</h1>
-        <p>Current count: <strong>{props.count}</strong></p>
-        <button className="btn btn-primary" onClick={props.increment}>Increment</button>
-        <br />
-        <button className="btn btn-primary" onClick={props.getProjects}>Get Projects</button>
+class Home extends React.Component {
+    componentDidMount() {
+        this.props.getProjects()
+    }
 
-        {renderProjectsTable(props.projects)}
-    </div>
-);
+    render() {
+        return (<div>
+            <h1>Projects</h1>
+            {renderProjectsTable(this.props.projects)}
+        </div>);
+    }
+};
 
 function renderProjectsTable(projects) {
     return (
