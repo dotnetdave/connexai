@@ -1,7 +1,4 @@
 ﻿using Google.Cloud.Datastore.V1;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace ConnexAi.Persistence
 {
@@ -14,4 +11,3 @@ namespace ConnexAi.Persistence
         }
     }
 }
-        

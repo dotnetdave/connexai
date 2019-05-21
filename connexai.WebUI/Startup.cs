@@ -11,6 +11,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Reflection;
+using AutoMapper;
 
 namespace connexai
 {
@@ -22,30 +23,6 @@ namespace connexai
         }
 
         public IConfiguration Configuration { get; }
-
-        // This method gets called by the runtime. Use this method to add services to the container.
-        public IServiceProvider ConfigureServices(IServiceCollection services)
-        {
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
-
-            // In production, the React files will be served from this directory
-            services.AddSpaStaticFiles(configuration =>
-            {
-                configuration.RootPath = "ClientApp/build";
-            });
-
-            services.AddTransient(typeof(IPipelineBehavior<,>), typeof(RequestPreProcessorBehavior<,>));
-
-            services.AddMediatR(typeof(GetProjectsQuery).GetTypeInfo().Assembly);
-
-            return new Container()
-              // setup DI adapter
-              .WithDependencyInjectionAdapter(services,
-                  // optional: propagate exception if specified types are not resolved, and prevent fallback to default Asp resolution
-                  throwIfUnresolved: type => type.Name.EndsWith("Controller"))
-              // add registrations from CompositionRoot class
-              .ConfigureServiceProvider<CompositionRoot>();
-        }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
@@ -80,6 +57,27 @@ namespace connexai
                     spa.UseReactDevelopmentServer(npmScript: "start");
                 }
             });
+        }
+
+        // This method gets called by the runtime. Use this method to add services to the container.
+        public IServiceProvider ConfigureServices(IServiceCollection services)
+        {
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            // In production, the React files will be served from this directory
+            services.AddSpaStaticFiles(configuration =>
+            {
+                configuration.RootPath = "ClientApp/build";
+            });
+
+            services.AddAutoMapper(typeof(GetProjectsQuery).GetTypeInfo().Assembly);
+            services.AddTransient(typeof(IPipelineBehavior<,>), typeof(RequestPreProcessorBehavior<,>));
+            services.AddMediatR(typeof(GetProjectsQuery).GetTypeInfo().Assembly);
+
+            return new Container()
+              // setup DI adapter
+              .WithDependencyInjectionAdapter(services,
+                  throwIfUnresolved: type => type.Name.EndsWith("Controller"))
+              .ConfigureServiceProvider<CompositionRoot>();
         }
     }
 }

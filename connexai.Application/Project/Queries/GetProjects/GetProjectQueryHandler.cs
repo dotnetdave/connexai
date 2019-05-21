@@ -2,10 +2,7 @@
 using ConnexAi.Domain;
 using Google.Cloud.Datastore.V1;
 using MediatR;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -13,9 +10,8 @@ namespace ConnexAi.Application.Project.Queries.GetProjects
 {
     public class GetProjectsQueryHandler : IRequestHandler<GetProjectsQuery, ProjectsViewModel>
     {
-
-        private readonly IMapper mapper;
         private readonly DatastoreDb db;
+        private readonly IMapper mapper;
 
         public GetProjectsQueryHandler(IMapper mapper, DatastoreDb db)
         {

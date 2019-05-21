@@ -25,4 +25,3 @@ export function* getProjectsAsync() {
     const json = yield fetch('/api/projects/all').then(response => response.json());
     yield put({ type: GET_PROJECTS, projects: json.projects });
 }
-
